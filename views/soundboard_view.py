@@ -5,6 +5,7 @@ import discord
 from discord.commands.context import ApplicationContext
 from discord.channel import DMChannel, TextChannel
 from typing import Union
+import embed_messages.soundboard_messages as messages
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +60,8 @@ class SoundBoard(discord.ui.View):
         """
         self._create_board()
         if first:
-            await context.response.send_message(view=self)
+            embed = messages.soundboard_header()
+            await context.response.send_message(embed=embed, view=self)
 
         else:
             await context.send(view=self)
