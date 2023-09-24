@@ -9,10 +9,11 @@ import os
 import json
 import embed_messages.soundboard_messages as messages
 
+from tokens import BASE_PATH
 
 log = logging.getLogger(__name__)
 
-SOUND_CONFIG_FILE = "./sounds/sounds_config.json"
+SOUND_CONFIG_FILE = BASE_PATH + "/sounds/sounds_config.json"
 ALLOWED_CONTENT_TYPES = ["audio/mpeg"]
 SOUNDS_PER_BOARD = 25
 
@@ -24,6 +25,7 @@ class SoundBoardCog(commands.Cog):
 
     def __init__(self, bot) -> None:
         self.bot: discord.Bot = bot
+
         self._sounds = self._load_sounds()
         self.vc = VoiceClient()
 
@@ -96,7 +98,7 @@ class SoundBoardCog(commands.Cog):
             await context.response.send_message(embed=embed)
             return
 
-        if os.path.exists(f"./sounds/{file.filename}"):
+        if os.path.exists(f"{BASE_PATH}/sounds/{file.filename}"):
             embed = messages.error_message(
                 "Failed to upload sound. File with the same filename already exists"
             )
@@ -120,7 +122,7 @@ class SoundBoardCog(commands.Cog):
         self._sounds[name] = file.filename
         self._save_sounds_config()
 
-        await file.save(f"./sounds/{file.filename}")
+        await file.save(f"{BASE_PATH}/sounds/{file.filename}")
 
         embed = messages.uploaded_sound(name, file.filename)
         await context.response.send_message(embed=embed)
@@ -146,16 +148,16 @@ class SoundBoardCog(commands.Cog):
             await context.response.send_message(embed=embed)
             return
 
-        if os.path.exists(f"./sounds/{self._sounds[name]}"):
-            os.remove(f"./sounds/{self._sounds[name]}")
+        if os.path.exists(f"{BASE_PATH}/sounds/{self._sounds[name]}"):
+            os.remove(f"{BASE_PATH}/sounds/{self._sounds[name]}")
         del self._sounds[name]
         self._save_sounds_config()
         embed = messages.deleted_sound(name)
         await context.response.send_message(embed=embed)
 
     def _save_sounds_config(self):
-        if not os.path.exists("./sounds"):
-            os.mkdir("./sounds")
+        if not os.path.exists("{BASE_PATH}/sounds"):
+            os.mkdir("{BASE_PATH}/sounds")
 
         with open(SOUND_CONFIG_FILE, "w") as config_file:
             json.dump(self._sounds, config_file)

@@ -7,6 +7,7 @@ from logger.logger import setup_logger
 import cogs.soundboard as sound_board_cog
 
 setup_logger()
+
 log = logging.getLogger(__name__)
 
 bot = discord.Bot(debug_guilds=[GUILD_ID], intents=discord.Intents.all())

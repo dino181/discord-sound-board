@@ -6,6 +6,7 @@ from discord.commands.context import ApplicationContext
 from discord.channel import DMChannel, TextChannel
 from typing import Union
 import embed_messages.soundboard_messages as messages
+from tokens import BASE_PATH
 
 log = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ class SoundBoard(discord.ui.View):
         if self._voice_client.vc:
             self._voice_client.vc.stop()
             sound = discord.FFmpegPCMAudio(
-                f"./sounds/{sound}", executable="./ffmpeg/bin/ffmpeg.exe"
+                f"{BASE_PATH}/sounds/{sound}", executable="./ffmpeg/bin/ffmpeg.exe"
             )
             self._voice_client.vc.play(sound)
 
